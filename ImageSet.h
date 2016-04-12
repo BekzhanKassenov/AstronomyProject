@@ -28,5 +28,4 @@ public:
     const std::string& nextImage();
 };
 
-
 #endif // _IMAGESET_H_

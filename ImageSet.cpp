@@ -2,6 +2,7 @@
 // Created by bekzhan on 4/12/16.
 //
 
+#include <fstream>
 #include "ImageSet.h"
 
 ImageSet::ImageSet() : currentImage(0) { }
@@ -11,32 +12,47 @@ ImageSet::ImageSet(const std::string& configPath) : currentImage(0) {
 }
 
 void ImageSet::loadData(const std::string &configPath) {
-    cv::FileStorage storage(configPath, cv::FileStorage::READ);
+    std::ifstream input(configPath);
 
-    if (!storage.isOpened()) {
-        std::cerr << "Could not open file storage at " << configPath << " for reading" << std::endl;
+    if (!input.is_open()) {
+        std::cerr << "Could not open file at " << configPath << " for reading" << std::endl;
         return;
     }
 
-    cv::FileNode root = storage.getFirstTopLevelNode();
-
-    for (cv::FileNode it: root) {
-        images.emplace_back(std::string(it));
+    std::string buf;
+    while (input >> buf) {
+        images.emplace_back(buf);
     }
 
     coordinates.resize(images.size());
 
-    storage.release();
+    input.close();
 }
 
 void ImageSet::saveData(const std::string &configPath) {
-//    cv::FileStorage storage(configPath, cv::FileStorage::WRITE);
-//    if (!storage.isOpened()) {
-//        std::cerr << "Could not open file storage at " << configPath << " for writing" << std::endl;
-//        return;
-//    }
-//
-//    for (auto i = 0; i < images.size(); i++) {
-//
-//    }
+    std::ofstream output(configPath);
+    if (!output.is_open()) {
+        std::cerr << "Could not open file at " << configPath << " for writing" << std::endl;
+        return;
+    }
+
+    for (auto i = 0; i < images.size(); i++) {
+        output << "{ " << images[i] << ", " << coordinates[i].first << ", " << coordinates[i].second << " }" << std::endl;
+    }
+
+    output.close();
+}
+
+void ImageSet::saveCoordinates(double x, double y) {
+    coordinates[currentImage] = std::pair <double, double> (x, y);
+}
+
+const std::string& ImageSet::nextImage() {
+    if (currentImage + 1 >= (int)images.size()) {
+        return std::string();
+    }
+
+    currentImage++;
+
+    return images[currentImage];
 }
