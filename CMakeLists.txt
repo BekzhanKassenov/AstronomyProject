@@ -11,6 +11,8 @@ include_directories(${CMAKE_SOURCE_DIR})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
+
 set(SOURCE_FILES main.cpp ImageSet.cpp ImageSet.h)
 add_executable(AstronomyProject ${SOURCE_FILES})
 target_link_libraries(AstronomyProject ${OpenCV_LIBS})

@@ -11,6 +11,10 @@ ImageSet::ImageSet(const std::string& configPath) : currentImage(0) {
     loadData(configPath);
 }
 
+ImageSet::~ImageSet() {
+    saveData("config/output.txt");
+}
+
 void ImageSet::loadData(const std::string &configPath) {
     std::ifstream input(configPath);
 
@@ -23,6 +27,13 @@ void ImageSet::loadData(const std::string &configPath) {
     while (input >> buf) {
         images.emplace_back(buf);
     }
+
+    std::cout << "Loaded image names:";
+    for (auto fileName: images) {
+        std::cout << " " << fileName;
+    }
+
+    std::cout << std::endl;
 
     coordinates.resize(images.size());
 
@@ -44,15 +55,15 @@ void ImageSet::saveData(const std::string &configPath) {
 }
 
 void ImageSet::saveCoordinates(double x, double y) {
-    coordinates[currentImage] = std::pair <double, double> (x, y);
+    coordinates[currentImage - 1] = std::pair <double, double> (x, y);
 }
 
 const std::string& ImageSet::nextImage() {
-    if (currentImage + 1 >= (int)images.size()) {
+    if (currentImage >= (int)images.size()) {
         return std::string();
     }
 
     currentImage++;
 
-    return images[currentImage];
+    return images[currentImage - 1];
 }

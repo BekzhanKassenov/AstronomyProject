@@ -19,6 +19,8 @@ public:
 
     ImageSet(const std::string& configPath);
 
+    ~ImageSet();
+
     void loadData(const std::string &configPath);
 
     void saveData(const std::string& configPath);
