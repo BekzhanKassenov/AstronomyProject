@@ -1,2 +1,4 @@
 config/output.txt
+dataset/
 AstronomyProject
+CMakeLists.txt
